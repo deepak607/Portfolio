@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
-
+ 
 <header>
   <nav>
     <div class="logo">
@@ -28,7 +28,7 @@
     </div>
   </nav>
 </header>
-
+ 
 <section class="hero" id="home">
   <div class="hero-avatar"><div>
     <svg viewBox="0 0 64 64" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,12 +46,12 @@
         View Resume
         <span class="dropdown-arrow"></span>
     </button>
-
+ 
     <div class="resume-menu" id="resumeMenu">
         <a href="./contents/resume/mainresume.pdf" target="_blank">
             View Resume
         </a>
-
+ 
         <a href="./contents/resume/mainresume.pdf"
            download="Deepak-Dileep-Resume.pdf">
             Download PDF
@@ -66,11 +66,11 @@
     </div>
   </div>
 </section>
-
+ 
 <section class="panel" id="services">
   <h2 class="section-title">Building Digital Experiences</h2>
   <p class="section-sub">Full stack developer focused on Python, Django, and responsive, database-driven web applications.</p>
-
+ 
   <div class="card-grid">
     <div class="card">
       <div class="card-icon">💻</div>
@@ -106,41 +106,41 @@
       </ul>
     </div>
   </div>
-
+ 
   <div class="view-projects-wrap">
     <a href="projects.html" class="btn btn-secondary">▦ View My Projects</a>
   </div>
 </section>
-
+ 
 <section class="availability-section">
     <div class="availability-content">
-
+ 
         <div class="availability-status">
             <span class="status-dot"></span>
             <span>Currently Available</span>
         </div>
-
+ 
         <h2>Open to Python Full Stack Opportunities</h2>
-
+ 
         <p>
             I'm currently looking for opportunities where I can apply my
             Python and Django skills, contribute to real-world projects,
             and continue growing as a full stack developer.
         </p>
-
+ 
         <div class="availability-actions">
             <a href="projects.html" class="btn btn-primary">
                 View My Projects
             </a>
-
+ 
             <a href="index.html#contact" class="btn btn-secondary">
                 Get In Touch
             </a>
         </div>
-
+ 
     </div>
 </section>
-
+ 
 <section class="panel" id="contact">
   <div class="contact-panel">
     <div class="contact-copy">
@@ -151,7 +151,7 @@
         ✉️ <a href="mailto:deepakdileepdev15@gmail.com" style="color:var(--accent); font-weight:600;">deepakdileepdev15@gmail.com</a>
       </p>
     </div>
-    <form action="https://formsubmit.co/deepakdileepdev15@gmail.com" method="POST">
+    <form action="https://formsubmit.co/deepakdileepdev15@gmail.com" method="POST" id="contactForm" target="hidden_iframe">
       <div class="field">
         <label for="name">Name</label>
         <input id="name" name="name" type="text" placeholder="Your Name" required>
@@ -168,36 +168,47 @@
         <input type="hidden" name="_template" value="table">
         <button type="submit" class="send-btn">Send</button>
     </form>
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+ 
+    <div class="toast" id="toast">
+      <div class="toast-icon" id="toastIcon"></div>
+      <div class="toast-body">
+        <p class="toast-title" id="toastTitle"></p>
+        <p class="toast-message" id="toastMessage"></p>
+      </div>
+      <button class="toast-close" id="toastClose" aria-label="Close notification">&times;</button>
+    </div>
   </div>
 </section>
-
+ 
 <footer>
   &copy; 2026 Deepak Dileep. All rights reserved.
 </footer>
-
+ 
 <script>
-
+ 
   // Resume dropdown
-const resumeBtn = document.getElementById("resumeBtn");
-const resumeMenu = document.getElementById("resumeMenu");
-
-resumeBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
-
-    resumeMenu.classList.toggle("open");
-    resumeBtn.classList.toggle("active");
-});
-
-document.addEventListener("click", () => {
-    resumeMenu.classList.remove("open");
-    resumeBtn.classList.remove("active");
-});
+  const resumeBtn = document.getElementById("resumeBtn");
+  const resumeMenu = document.getElementById("resumeMenu");
+ 
+  resumeBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+ 
+      resumeMenu.classList.toggle("open");
+      resumeBtn.classList.toggle("active");
+  });
+ 
+  document.addEventListener("click", () => {
+      resumeMenu.classList.remove("open");
+      resumeBtn.classList.remove("active");
+  });
+ 
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
   navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
-
+ 
   // Light/dark theme toggle (starts light, toggle switches to dark)
   const themeToggle = document.getElementById('themeToggle');
   const root = document.documentElement;
@@ -228,29 +239,78 @@ document.addEventListener("click", () => {
       root.style.setProperty('--header-bg', 'rgba(250,246,238,0.88)');
     }
   });
-
-document.querySelector('#contact form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  try {
-    const res = await fetch('https://formsubmit.co/ajax/deepakdileepdev15@gmail.com', {
-      method: 'POST',
-      headers: { 'Accept': 'application/json' },
-      body: data
-    });
-    if (res.ok) {
-      alert('Message sent!');
-      form.reset();
-    } else {
-      alert('Something went wrong — please try again or email me directly.');
-    }
-  } catch (err) {
-    alert('Network error — please email me directly.');
+ 
+  // Toast notification system (replaces native alert())
+  const toast = document.getElementById('toast');
+  const toastIcon = document.getElementById('toastIcon');
+  const toastTitle = document.getElementById('toastTitle');
+  const toastMessage = document.getElementById('toastMessage');
+  const toastClose = document.getElementById('toastClose');
+  let toastTimer = null;
+ 
+  const icons = {
+    success: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    error: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>'
+  };
+ 
+  function showToast(type, title, message, duration = 5000) {
+    toast.classList.remove('toast-success', 'toast-error');
+    toast.classList.add(type === 'success' ? 'toast-success' : 'toast-error');
+    toastIcon.innerHTML = icons[type];
+    toastTitle.textContent = title;
+    toastMessage.textContent = message;
+ 
+    toast.classList.add('toast-show');
+ 
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('toast-show'), duration);
   }
-});
-
+ 
+  toastClose.addEventListener('click', () => {
+    clearTimeout(toastTimer);
+    toast.classList.remove('toast-show');
+  });
+ 
+  // Contact form submission — uses a hidden iframe target instead of fetch()
+  // so there's no CORS dependency on which domain FormSubmit thinks activated
+  // the form. Works identically on localhost, GitHub Pages, your live domain, etc.
+  const contactForm = document.getElementById('contactForm');
+  const hiddenIframe = document.getElementById('hidden_iframe');
+  const submitBtn = contactForm.querySelector('.send-btn');
+  const originalBtnText = submitBtn.textContent;
+  let formSubmitted = false;
+ 
+  let sendFallbackTimer = null;
+ 
+  contactForm.addEventListener('submit', () => {
+    formSubmitted = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+ 
+    // Safety net: if the iframe never fires 'load' (rare, e.g. flaky network),
+    // don't leave the button stuck forever.
+    clearTimeout(sendFallbackTimer);
+    sendFallbackTimer = setTimeout(() => {
+      if (!formSubmitted) return;
+      formSubmitted = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      showToast('error', 'Taking longer than expected', 'If you don\'t hear back, please email me directly.');
+    }, 12000);
+  });
+ 
+  hiddenIframe.addEventListener('load', () => {
+    if (!formSubmitted) return; // ignore the iframe's initial blank load on page load
+    clearTimeout(sendFallbackTimer);
+    formSubmitted = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+    showToast('success', 'Message sent', 'Thanks for reaching out — I\'ll get back to you soon.');
+    contactForm.reset();
+  });
+ 
 </script>
-
+ 
 </body>
 </html>
+ 
