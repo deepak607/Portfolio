@@ -347,6 +347,36 @@
   .projects-hero h1{ font-size:2.6rem; font-weight:800; margin-bottom:14px; }
   .projects-hero p{ color:var(--text-dim); font-size:1.05rem; max-width:600px; }
 
+  .project-thumb-placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg, var(--bg-soft), var(--accent-soft));
+}
+.thumb-icon{
+  font-size:3.5rem;
+}
+
+.status-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:0.85rem;
+  font-weight:700;
+  padding:6px 14px;
+  border-radius:999px;
+}
+.status-progress{
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+.status-progress .status-dot{
+  width:7px; height:7px;
+  border-radius:50%;
+  background:#e0a638;
+  box-shadow:0 0 0 3px rgba(224,166,56,0.18);
+}
+
   /* CONTACT */
   .contact-panel{
     background:linear-gradient(135deg, var(--bg-soft), var(--card-border));
